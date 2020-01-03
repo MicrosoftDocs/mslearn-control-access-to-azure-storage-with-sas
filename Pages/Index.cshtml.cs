@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Collections.Generic;
 
-namespace test.Pages
+namespace patientrecords.Pages
 {
     public class IndexModel : PageModel
     {

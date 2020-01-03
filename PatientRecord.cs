@@ -1,6 +1,6 @@
 using System;
 
-namespace test
+namespace patientrecords
 {
     public class PatientRecord
     {

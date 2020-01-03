@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace test.Pages
+namespace patientrecords.Pages
 {
     public class ExternalModel : PageModel
     {

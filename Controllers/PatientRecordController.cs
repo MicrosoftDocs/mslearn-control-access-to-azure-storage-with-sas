@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Azure.Storage;
@@ -9,7 +8,7 @@ using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration; 
 using Azure.Storage.Sas;
 
-namespace test.Controllers
+namespace patientrecords.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
