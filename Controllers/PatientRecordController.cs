@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Azure.Storage;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration; 
 using Azure.Storage.Sas;
+using Azure.Identity;
 
 namespace patientrecords.Controllers
 {
@@ -58,37 +58,25 @@ namespace patientrecords.Controllers
         public PatientRecord Get(string name, string flag)
         {
             BlobClient blob = _container.GetBlobClient(name);
-            return new PatientRecord { Name=blob.Name, ImageURI=BuildSASUri(blob.Uri).AbsoluteUri };
+            return new PatientRecord { Name=blob.Name, ImageURI=blob.Uri.AbsoluteUri, SAStoken=BuildSASUri(blob) };
         }
 
-        private Uri BuildSASUri(Uri StorageAccountBlobUri)
+        private string BuildSASUri(BlobClient blob)
         {
-            // Create a service level SAS that only allows reading from service
-            // level APIs
-            AccountSasBuilder sas = new AccountSasBuilder
+            // Create a user SAS that only allows reading for a minute
+            BlobSasBuilder sas = new BlobSasBuilder 
             {
-                // Allow access to blobs
-                Services = AccountSasServices.Blobs,
-
-                // Allow access to the container
-                ResourceTypes = AccountSasResourceTypes.Object,
-
-                // Access expires in 5 minutes!
-                ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(5)
+                BlobContainerName = blob.BlobContainerName,
+                BlobName = blob.Name,
+                Resource = "b",
+                ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(1)
             };
             // Allow read access
-            sas.SetPermissions(AccountSasPermissions.Read);
+            sas.SetPermissions(BlobSasPermissions.Read);
+            BlobServiceClient blobClient = new BlobServiceClient(blob.Uri, new DefaultAzureCredential());
+            UserDelegationKey key = blobClient.GetUserDelegationKey(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(7));
 
-            // Create a SharedKeyCredential that we can use to sign the SAS token
-            StorageSharedKeyCredential credential = new StorageSharedKeyCredential(
-                _iconfiguration.GetValue<string>("StorageAccount:AccountName"), 
-                _iconfiguration.GetValue<string>("StorageAccount:AccountKey")
-            );
-
-            UriBuilder sasUri = new UriBuilder(StorageAccountBlobUri);
-            sasUri.Query = sas.ToSasQueryParameters(credential).ToString();
-        
-            return sasUri.Uri;
+            return sas.ToSasQueryParameters(key, _container.AccountName).ToString();;
         }
 
     }

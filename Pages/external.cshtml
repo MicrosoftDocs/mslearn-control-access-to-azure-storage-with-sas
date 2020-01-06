@@ -19,6 +19,7 @@
             <label for="sasKey">Key</label>
             <input type="text" class="form-control" id="sasKey" aria-describedby="help" placeholder="provided access key">
             <small id="help" class="form-text text-muted">You wont be able to view the image without a key.</small>
+            <button id="btn-getKey" class="btn btn-success">Get Key</button>
         </div>
         <button id="btn-submit" type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -36,6 +37,11 @@
             $.get('api/PatientRecords/' + $('#patientID').val(), function (data) {
                 var imageURL = data.imageURI + '?' + $('#sasKey').val();
                 $('#result').html('<img id="patientScan" class="alert alert-success" src="' + imageURL + '" alt="patient scan" onerror="this.classList.remove(\'alert-success\'); this.classList.add(\'alert-danger\')"//>');
+            }, 'json');
+        });
+        $('#btn-getKey').click(function(){
+            $.get('api/PatientRecords/' + $('#patientID').val() + '/secure', function (data) {
+                $('#sasKey').val = data.SAStoken;
             }, 'json');
         });
     });
