@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/bin/Debug/netcoreapp3.0/patient-records.dll",
+      "program": "${workspaceFolder}/bin/Debug/netcoreapp2.2/patient-records.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "stopAtEntry": false,

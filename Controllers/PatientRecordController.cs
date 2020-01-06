@@ -6,7 +6,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration; 
 using Azure.Storage.Sas;
-using Azure.Identity;
+using Azure.Storage;
 
 namespace patientrecords.Controllers
 {
@@ -38,7 +38,7 @@ namespace patientrecords.Controllers
             foreach (BlobItem blobItem in _container.GetBlobs())
             {
                 BlobClient blob = _container.GetBlobClient(blobItem.Name);
-                var patient = new PatientRecord { Name=blob.Name, ImageURI=blob.Uri.ToString() };
+                var patient = new PatientRecord { name=blob.Name, imageURI=blob.Uri.ToString() };
                 records.Add(patient);
             }
 
@@ -50,7 +50,7 @@ namespace patientrecords.Controllers
         public PatientRecord Get(string name)
         {
             BlobClient blob = _container.GetBlobClient(name);
-            return new PatientRecord { Name=blob.Name, ImageURI=blob.Uri.AbsoluteUri };
+            return new PatientRecord { name=blob.Name, imageURI=blob.Uri.AbsoluteUri };
         }
 
         // GET PatientRecord/patient-nnnnnn/secure
@@ -58,7 +58,7 @@ namespace patientrecords.Controllers
         public PatientRecord Get(string name, string flag)
         {
             BlobClient blob = _container.GetBlobClient(name);
-            return new PatientRecord { Name=blob.Name, ImageURI=blob.Uri.AbsoluteUri, SAStoken=BuildSASUri(blob) };
+            return new PatientRecord { Name=blob.Name, ImageURI=blob.Uri.AbsoluteUri, sasToken=BuildSASUri(blob) };
         }
 
         private string BuildSASUri(BlobClient blob)
@@ -73,10 +73,12 @@ namespace patientrecords.Controllers
             };
             // Allow read access
             sas.SetPermissions(BlobSasPermissions.Read);
-            BlobServiceClient blobClient = new BlobServiceClient(blob.Uri, new DefaultAzureCredential());
-            UserDelegationKey key = blobClient.GetUserDelegationKey(DateTimeOffset.UtcNow, DateTimeOffset.UtcNow.AddDays(7));
+            var storageSharedKeyCredential = new StorageSharedKeyCredential(
+                _iconfiguration.GetValue<string>("StorageAccount:AccountName"),
+                _iconfiguration.GetValue<string>("StorageAccount:AccountKey")
+            );
 
-            return sas.ToSasQueryParameters(key, _container.AccountName).ToString();;
+            return sas.ToSasQueryParameters(storageSharedKeyCredential).ToString();;
         }
 
     }

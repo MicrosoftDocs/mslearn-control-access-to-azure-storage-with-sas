@@ -4,10 +4,10 @@ namespace patientrecords
 {
     public class PatientRecord
     {
-        public string Name { get; set; }
+        public string name { get; set; }
 
-        public string ImageURI { get; set; }
+        public string imageURI { get; set; }
 
-        public string SAStoken { get; set; }
+        public string sasToken { get; set; }
     }
 }

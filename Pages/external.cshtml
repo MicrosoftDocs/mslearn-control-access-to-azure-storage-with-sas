@@ -33,16 +33,20 @@
     $(function () {
         $('#getPatientImage').submit(function(e) {
             e.preventDefault();
-            $('#result').empty();
-            $.get('api/PatientRecords/' + $('#patientID').val(), function (data) {
-                var imageURL = data.imageURI + '?' + $('#sasKey').val();
-                $('#result').html('<img id="patientScan" class="alert alert-success" src="' + imageURL + '" alt="patient scan" onerror="this.classList.remove(\'alert-success\'); this.classList.add(\'alert-danger\')"//>');
-            }, 'json');
         });
-        $('#btn-getKey').click(function(){
-            $.get('api/PatientRecords/' + $('#patientID').val() + '/secure', function (data) {
-                $('#sasKey').val = data.SAStoken;
-            }, 'json');
-        });
+    });
+
+    $('#btn-submit').click(function(){
+        $('#result').empty();
+        $.get('api/PatientRecords/' + $('#patientID').val(), function (data) {
+            var imageURL = data.imageURI + '?' + $('#sasKey').val();
+            $('#result').html('<img id="patientScan" class="alert alert-success" src="' + imageURL + '" alt="patient scan" onerror="this.classList.remove(\'alert-success\'); this.classList.add(\'alert-danger\')"//>');
+        }, 'json');
+    });
+
+    $('#btn-getKey').click(function(){
+        $.get('api/PatientRecords/' + $('#patientID').val() + '/secure', function (data) {
+            $('#sasKey').val(data.sasToken);
+        }, 'json');
     });
 </script>
