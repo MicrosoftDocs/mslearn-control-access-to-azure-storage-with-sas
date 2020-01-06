@@ -58,7 +58,7 @@ namespace patientrecords.Controllers
         public PatientRecord Get(string name, string flag)
         {
             BlobClient blob = _container.GetBlobClient(name);
-            return new PatientRecord { Name=blob.Name, ImageURI=blob.Uri.AbsoluteUri, sasToken=BuildSASUri(blob) };
+            return new PatientRecord { name=blob.Name, imageURI=blob.Uri.AbsoluteUri, sasToken=BuildSASUri(blob) };
         }
 
         private string BuildSASUri(BlobClient blob)
