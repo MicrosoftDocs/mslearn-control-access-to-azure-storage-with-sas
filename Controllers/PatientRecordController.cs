@@ -52,34 +52,5 @@ namespace patientrecords.Controllers
             BlobClient blob = _container.GetBlobClient(name);
             return new PatientRecord { name=blob.Name, imageURI=blob.Uri.AbsoluteUri };
         }
-
-        // GET PatientRecord/patient-nnnnnn/secure
-        [HttpGet("{Name}/{secure}")]
-        public PatientRecord Get(string name, string flag)
-        {
-            BlobClient blob = _container.GetBlobClient(name);
-            return new PatientRecord { name=blob.Name, imageURI=blob.Uri.AbsoluteUri, sasToken=BuildSASUri(blob) };
-        }
-
-        private string BuildSASUri(BlobClient blob)
-        {
-            // Create a user SAS that only allows reading for a minute
-            BlobSasBuilder sas = new BlobSasBuilder 
-            {
-                BlobContainerName = blob.BlobContainerName,
-                BlobName = blob.Name,
-                Resource = "b",
-                ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(1)
-            };
-            // Allow read access
-            sas.SetPermissions(BlobSasPermissions.Read);
-            var storageSharedKeyCredential = new StorageSharedKeyCredential(
-                _iconfiguration.GetValue<string>("StorageAccount:AccountName"),
-                _iconfiguration.GetValue<string>("StorageAccount:AccountKey")
-            );
-
-            return sas.ToSasQueryParameters(storageSharedKeyCredential).ToString();;
-        }
-
     }
 }

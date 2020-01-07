@@ -44,9 +44,5 @@
         }, 'json');
     });
 
-    $('#btn-getKey').click(function(){
-        $.get('api/PatientRecords/' + $('#patientID').val() + '/secure', function (data) {
-            $('#sasKey').val(data.sasToken);
-        }, 'json');
-    });
+
 </script>
