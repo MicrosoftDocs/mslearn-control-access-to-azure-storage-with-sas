@@ -39,7 +39,7 @@
     $('#btn-submit').click(function(){
         $('#result').empty();
         $.get('api/PatientRecords/' + $('#patientID').val(), function (data) {
-            var imageURL = data.imageURI + '?' + $('#sasKey').val();
+            var imageURL = data.imageURI + $('#sasKey').val();
             $('#result').html('<img id="patientScan" class="alert alert-success" src="' + imageURL + '" alt="patient scan" onerror="this.classList.remove(\'alert-success\'); this.classList.add(\'alert-danger\')"//>');
         }, 'json');
     });

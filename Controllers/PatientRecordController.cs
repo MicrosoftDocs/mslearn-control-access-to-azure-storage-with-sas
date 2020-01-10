@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration; 
+
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using Microsoft.Extensions.Configuration; 
 using Azure.Storage.Sas;
 using Azure.Storage;
+
+
 
 namespace patientrecords.Controllers
 {
@@ -18,11 +21,14 @@ namespace patientrecords.Controllers
         private IConfiguration _iconfiguration;
 
         private BlobContainerClient _container;
+ 
 
         public PatientRecordsController(ILogger<PatientRecordsController> logger, IConfiguration iconfiguration)
         {
             _logger = logger;
-            _iconfiguration = iconfiguration; 
+            _iconfiguration = iconfiguration;
+
+            // Azure Blob storage client library v12
             _container = new BlobContainerClient(
                 _iconfiguration.GetValue<string>("StorageAccount:ConnectionString"),
                 _iconfiguration.GetValue<string>("StorageAccount:Container")
