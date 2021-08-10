@@ -9,8 +9,6 @@ using Azure.Storage.Blobs.Models;
 using Azure.Storage.Sas;
 using Azure.Storage;
 
-
-
 namespace patientrecords.Controllers
 {
     [ApiController]
