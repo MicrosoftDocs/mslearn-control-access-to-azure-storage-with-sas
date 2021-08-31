@@ -15,7 +15,7 @@ This repository contains the supporting code and deployment resources for the [C
 
 ## Prerequisites
 
-The sample is built on .NET Core 2.2, Razor, Bootstrap, and jQuery.
+The sample is built on .NET Core 3.1, Razor, Bootstrap, and jQuery.
 
 ## Setup
 
