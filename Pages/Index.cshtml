@@ -17,7 +17,7 @@
 </div>
 
 <script>
-    $(function () {
+    document.addEventListener('DOMContentLoaded', function () {
         $('#btn-all').on('click', function () {
             $.get('api/PatientRecords', function (data) {
                 $('#result').empty();
